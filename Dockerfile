@@ -4,4 +4,6 @@ COPY ./build/libs/*.jar candidate-service.jar/
 
 EXPOSE 80
 
-ENTRYPOINT ["java","-jar","candidate-service.jar"]
+CMD ["java","-Xmx50m","-jar","candidate-service.jar"]
+
+#ENTRYPOINT ["java","-jar","candidate-service.jar"]
