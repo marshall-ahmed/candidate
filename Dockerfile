@@ -1,12 +1,20 @@
 FROM adoptopenjdk/openjdk11:ubi
 
-VOLUME /tmp
+COPY --chown=appuser ./build/libs/candidate.jar .
 
-COPY ./build/libs/*.jar ./build/libs/candidate-service.jar/
+RUN chmod 400 ms-ecourt-document.jar
 
-EXPOSE 80
+ENTRYPOINT ["java","-jar","candidate.jar"]
 
-ENV JAVA_OPTS=""
+#FROM adoptopenjdk/openjdk11:ubi
 
-ENTRYPOINT ["java","-jar","./build/libs/candidate-service.jar"]
+#VOLUME /tmp
+
+#COPY ./build/libs/*.jar candidate-service.jar/
+
+#EXPOSE 80
+
+#ENV JAVA_OPTS=""
+
+#ENTRYPOINT ["java","-jar","/candidate-service.jar"]
 
