@@ -5,6 +5,7 @@ plugins {
 }
 
 group = 'com.candidate'
+version = '0.1.5-SNAPSHOT'
 sourceCompatibility = '11'
 
 
@@ -27,4 +28,9 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+	enabled = true
+	archiveFileName = "${project.name}-light.jar"
 }

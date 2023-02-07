@@ -17,7 +17,6 @@ spec:
         - name: candidate
           image: ${REPOSITORY_TAG}
           imagePullPolicy: Never
-
 ---
 apiVersion: v1
 kind: Service
