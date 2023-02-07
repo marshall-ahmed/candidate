@@ -8,7 +8,7 @@ pipeline {
      YOUR_DOCKERHUB_USERNAME = "namrahov"
      ORGANIZATION_NAME = "marshall-ahmed"
      SERVICE_NAME = "candidate"
-     REPOSITORY_TAG = "${YOUR_DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
+     REPOSITORY_TAG = "${YOUR_DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_NUMBER}"
    }
 
    stages {
@@ -27,13 +27,13 @@ pipeline {
 
       stage('Build Image') {
          steps {
-           sh 'docker build -t candidate-image:${BUILD_ID} .'
+           sh 'docker build -t candidate-image:${BUILD_NUMBER} .'
          }
       }
 
       stage('Create Tag') {
-         steps t
-             sh 'docker tag candidate-image:${BUILD_ID} namrahov/candidate-image:${BUILD_ID}'
+         steps {
+             sh 'docker tag candidate-image:${BUILD_NUMBER} namrahov/candidate-image:${BUILD_NUMBER}'
           }
       }
 
@@ -41,21 +41,16 @@ pipeline {
       stage ('Push docker image to image repository') {
          steps {
              script {
-                sh "docker push namrahov/candidate-image:${BUILD_ID}"
+                sh "docker push namrahov/candidate-image:${BUILD_NUMBER}"
              }
           }
       }
 
       stage('Deploy to Cluster') {
           steps {
-                    sh 'envsubst < ${WORKSPACE}/deploy-all.yaml | kubectl apply -f -'
+               sh 'envsubst < ${WORKSPACE}/deploy-all.yaml | kubectl apply -f -'
           }
       }
    }
 }
 
- docker build -t company-image:0.0.9 .
-
-   docker tag company-image:0.0.9 namrahov/company-image:0.0.9
-
-   docker push namrahov/company-image:0.0.9
