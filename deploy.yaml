@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: r-candidate
+spec:
+  minReadySeconds: 30
+  selector:
+    matchLabels:
+      app: candidate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: candidate
+    spec:
+      containers:
+        - name: candidate
+          image: ${REPOSITORY_TAG}
+          imagePullPolicy: Never
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: s-candidate
+
+spec:
+  selector:
+    app: candidate
+
+  ports:
+    - name: http
+      port: 8080
+      nodePort: 30080
+
+  type: NodePort
