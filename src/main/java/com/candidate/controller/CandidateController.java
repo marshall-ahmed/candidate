@@ -10,7 +10,7 @@ public class CandidateController {
 
     @GetMapping
     public Integer sumCompany() {
-        return 13;
+        return 14;
     }
 }
 
