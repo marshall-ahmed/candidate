@@ -1,10 +1,7 @@
-FROM adoptopenjdk/openjdk11:ubi
-
-COPY --chown=appuser ./build/libs/candidate.jar .
-
-RUN chmod 400 ms-ecourt-document.jar
-
-ENTRYPOINT ["java","-jar","candidate.jar"]
+FROM adoptopenjdk/openjdk11:latest
+RUN mkdir /opt/app
+COPY ./build/libs/*.jar /opt/app
+CMD ["java", "-jar", "/opt/app/japp.jar"]
 
 #FROM adoptopenjdk/openjdk11:ubi
 
