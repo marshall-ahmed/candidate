@@ -30,7 +30,3 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-jar {
-	enabled = true
-	archiveFileName = "${project.name}-light.jar"
-}

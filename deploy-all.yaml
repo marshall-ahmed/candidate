@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: candidate
+  name: r-candidate
 spec:
   minReadySeconds: 30
   selector:
@@ -21,7 +21,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: candidate
+  name: s-candidate
 
 spec:
   selector:
