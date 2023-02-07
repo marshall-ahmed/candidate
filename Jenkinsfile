@@ -5,8 +5,8 @@ pipeline {
      // You must set the following environment variables
      // ORGANIZATION_NAME
      // YOUR_DOCKERHUB_USERNAME (it doesn't matter if you don't have one)
-     YOUR_DOCKERHUB_USERNAME = "namrahov"
-     ORGANIZATION_NAME = "marshall-ahmed"
+     //YOUR_DOCKERHUB_USERNAME = "namrahov"
+     //ORGANIZATION_NAME = "marshall-ahmed"
      SERVICE_NAME = "candidate"
      REPOSITORY_TAG = "${YOUR_DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_NUMBER}"
    }
