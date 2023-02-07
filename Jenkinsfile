@@ -21,36 +21,21 @@ pipeline {
 
       stage ('Package') {
          steps {
-           sh './gradlew build -x test'
+           sh './gradlew clean build'
          }
       }
 
-      stage('Build Image') {
-         steps {
-           sh 'docker build -t candidate-image:${BUILD_NUMBER} .'
-         }
-      }
-
-      stage('Create Tag') {
-         steps {
-             sh 'docker tag candidate-image:${BUILD_NUMBER} namrahov/candidate-image:${BUILD_NUMBER}'
-          }
-      }
-
-
-      stage ('Push docker image to image repository') {
-         steps {
-             script {
-                sh "docker push namrahov/candidate-image:${BUILD_NUMBER}"
-             }
+      stage('Build and Push Image') {
+          steps {
+              sh 'docker image build -t ${REPOSITORY_TAG} .'
           }
       }
 
       stage('Deploy to Cluster') {
           steps {
-               sh 'envsubst < ${WORKSPACE}/deploy-all.yaml | kubectl apply -f -'
+              sh 'envsubst < ${WORKSPACE}/deploy.yaml | kubectl apply -f -'
           }
-      }
+       }
    }
 }
 
