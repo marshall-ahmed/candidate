@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: candidate
+spec:
+  selector:
+    matchLabels:
+      app: candidate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: candidate
+    spec:
+      containers:
+        - name: candidate
+          image: namrahov/candidate-image:0.1.5
