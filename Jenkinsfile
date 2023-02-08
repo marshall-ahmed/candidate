@@ -15,7 +15,7 @@ pipeline {
       stage('Preparation') {
          steps {
             cleanWs()
-            git credentialsId: 'hesen', url: "https://github.com/${ORGANIZATION_NAME}/${SERVICE_NAME}"
+            git credentialsId: 'Hello', url: "https://github.com/${ORGANIZATION_NAME}/${SERVICE_NAME}"
          }
       }
 
