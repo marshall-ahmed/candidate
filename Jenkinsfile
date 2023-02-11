@@ -11,9 +11,7 @@ pipeline {
     string(name: 'docker_repo', description: "Name of docker repository")
   }
 
-  tools{
-        maven 'maven3'
-    }
+
     stages {
         stage('Git Checkout') {
             when {
@@ -32,7 +30,7 @@ pipeline {
 			}
     		steps {
         		dir("${params.AppName}") {
-        			sh './gradlew clean build'
+        			sh './gradlew assemble'
         		}
     		}
 	    }
