@@ -22,17 +22,17 @@ pipeline {
             steps {
                 gitCheckout(
                     branch: "master",
-                    url: "https://github.com/VamsiTechTuts/spring-cloud-kubernetes.git"
+                    url: "https://github.com/marshall-ahmed/candidate.git"
                 )
             }
         }
-        stage('Build Maven'){
+        stage('Build Gradle'){
             when {
 				expression { params.action == 'create' }
 			}
     		steps {
         		dir("${params.AppName}") {
-        			sh 'mvn clean package'
+        			sh './gradlew clean build'
         		}
     		}
 	    }
@@ -66,7 +66,7 @@ pipeline {
 	                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
 	                    withCredentials([kubeconfigFile(credentialsId: 'kubernetes_config',
 	                        variable: 'KUBECONFIG')]) {
-	                        sh 'kubectl create -f kubernetes-configmap.yml'
+	                        sh 'kubectl create -f deploy-all.yaml'
 	                    }
 	                }
 	            }
