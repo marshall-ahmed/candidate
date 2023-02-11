@@ -1,0 +1,31 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: candidate
+spec:
+  type: LoadBalancer
+  selector:
+    app: candidate
+  ports:
+    - name: http
+      protocol: TCP
+      # ELB's port
+      port: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: candidate
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: candidate
+  template:
+    metadata:
+      labels:
+        app: candidate
+    spec:
+      containers:
+        - name: candidate
+          image: ${REPOSITORY_TAG}
