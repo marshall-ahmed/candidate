@@ -1,5 +1,12 @@
 @Library('jenkins-shared-library@master') _
 pipeline {
+    environment {
+       account = "${environment}"
+       eks_cluster_name = "eks-${account}"
+       artifacts_dir = "${env.WORKSPACE}/artifacts"
+       aws_region = "${params.aws_region}"
+       job_root_dir="${env.WORKSPACE}"
+    }
 
   agent any
 
@@ -13,13 +20,6 @@ pipeline {
 
 
     stages {
-        stage('List pods') {
-           steps {
-                 sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'
-                 sh 'chmod u+x ./kubectl'
-           }
-        }
-
         stage('Git Checkout') {
             when {
 				expression { params.action == 'create' }
@@ -41,6 +41,16 @@ pipeline {
         		}
     		}
 	    }
+	    stage('Generate kubeconfig for the cluster') {
+            steps {
+               script {
+                   env.KUBECONFIG = "${artifacts_dir}/${eks_cluster_name}-kubeconfig"
+                   sh 'chmod +x ${WORKSPACE}/generate_kubeconfig_eks.sh'
+               }
+                   sh(script: '${WORKSPACE}/generate_kubeconfig_eks.sh', label: 'Generate kubeconfig file')
+             }
+        }
+
 	    stage("Docker Build and Push") {
 	        when {
 				expression { params.action == 'create' }
