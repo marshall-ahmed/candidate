@@ -62,7 +62,7 @@ pipeline {
             	              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
             	              credentialsId: 'AWS_Credentials',
             	              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-            	              sh 'kubectl create -f deploy-all.yaml --context nurlan'
+            	              sh 'kubectl create -f deploy-all.yaml'
 
             	    }
             	 }
