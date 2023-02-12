@@ -62,7 +62,7 @@ pipeline {
             	              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
             	              credentialsId: 'AWS_Credentials',
             	              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-            	              withCredentials([kubeconfig(credentialsId: 'kubernetes_config',
+            	              withCredentials([file(credentialsId: 'k_config',
                               	                        variable: 'KUBECONFIG')]) {
                               	                        sh 'kubectl create -f deploy-all.yaml'
                               	                    }
