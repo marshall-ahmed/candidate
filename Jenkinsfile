@@ -74,15 +74,18 @@ pipeline {
 				expression { params.action == 'create' }
 			}
 	        steps {
-	            dir("${params.AppName}") {
-	                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-	                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-	                        credentialsId: 'AWS_Credentials',
-	                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-	                  sh 'kubectl create -f deploy-all.yaml'
-	                }
-	            }
-	        }
+            	            dir("${params.AppName}") {
+            	                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+            	                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            	                        credentialsId: 'AWS_Credentials',
+            	                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+            	                    withCredentials([kubeconfigFile(credentialsId: 'kubernetes_config',
+            	                        variable: 'KUBECONFIG')]) {
+            	                        sh 'kubectl create -f kubernetes-configmap.yml'
+            	                    }
+            	                }
+            	            }
+            }
 	    }
 
     }
