@@ -2,7 +2,7 @@
 pipeline {
     environment {
        account = "${environment}"
-       eks_cluster_name = "eks-${account}"
+       eks_cluster_name = "nurlan"
        artifacts_dir = "${env.WORKSPACE}/artifacts"
        aws_region = "${params.aws_region}"
        job_root_dir="${env.WORKSPACE}"
@@ -41,15 +41,6 @@ pipeline {
         		}
     		}
 	    }
-	    stage('Generate kubeconfig for the cluster') {
-            steps {
-               script {
-                   env.KUBECONFIG = "${artifacts_dir}/${eks_cluster_name}-kubeconfig"
-                   sh 'chmod +x ${WORKSPACE}/generate_kubeconfig_eks.sh'
-               }
-                   sh(script: '${WORKSPACE}/generate_kubeconfig_eks.sh', label: 'Generate kubeconfig file')
-             }
-        }
 
 	    stage("Docker Build and Push") {
 	        when {
