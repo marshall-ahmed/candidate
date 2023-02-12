@@ -62,10 +62,7 @@ pipeline {
 	                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 	                        credentialsId: 'AWS_Credentials',
 	                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-	                    withCredentials([subconfigFile(credentialsId: 'kubernetes_config',
-	                        variable: 'KUBECONFIG')]) {
-	                        sh 'kubectl create -f deploy-all.yaml'
-	                    }
+	                   sh 'kubectl create -f deploy-all.yaml'
 	                }
 	            }
 	        }
@@ -79,13 +76,12 @@ pipeline {
 	                        accessKeyVariable: 'AWS_ACCESS_KEY_ID',
 	                        credentialsId: 'AWS_Credentials',
 	                        secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-	               withCredentials([subconfigFile(credentialsId: 'kubernetes_config',
-	                        variable: 'KUBECONFIG')]) {
+
 	               sh """
 	                    kubectl delete deploy ${params.AppName}
 					    kubectl delete svc ${params.AppName}
 				   """
-	               }
+
 	            }
 	        }
 	    }
