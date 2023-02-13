@@ -44,33 +44,14 @@ pipeline {
 	            }
 	        }
 	    }
-	    stage("Docker CleanUP") {
-	        when {
-				expression { params.action == 'create' }
-			}
-	        steps {
-	            dockerCleanup ( "${params.ImageName}", "${params.docker_repo}" )
-			}
-		}
-	    stage("Create deployment") {
-			when {
-				expression { params.action == 'create' }
-			}
-	        steps {
-            	 dir("${params.AppName}") {
-            	    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-            	              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-            	              credentialsId: 'AWS_Credentials',
-            	              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-            	              withCredentials([kubeconfigFile(credentialsId: 'kubernetes_config',
-                              	                        variable: 'KUBECONFIG')]) {
-                              	                        sh 'kubectl create -f deploy-all.yaml'
-                              	                    }
+	   stage('Deploy App to Kubernetes') {
+         steps {
+           script {
+             kubernetesDeploy(configs: "deploy-all.yaml", kubeconfigId: "kubernetes")
+           }
+         }
+       }
 
-            	    }
-            	 }
-            }
-	    }
 
     }
 }
