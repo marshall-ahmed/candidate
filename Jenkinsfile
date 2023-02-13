@@ -44,12 +44,21 @@ pipeline {
 	            }
 	        }
 	    }
-	   stage('Deploy App to Kubernetes') {
-         steps {
-           script {
-             kubernetesDeploy(configs: "deploy-all.yaml", kubeconfigId: "kubernetes")
-           }
-         }
+
+       stage("Create deployment") {
+       			when {
+       				expression { params.action == 'create' }
+       			}
+       	        steps {
+                   	 dir("${params.AppName}") {
+                   	    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
+                   	              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                   	              credentialsId: 'AWS_Credentials',
+                   	              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+                   	                kubernetesDeploy(configs: "deploy-all.yaml", kubeconfigId: "kubernetes")
+                         }
+                   	 }
+                }
        }
 
 
