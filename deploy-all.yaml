@@ -1,13 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: candidate
+  name: d-candidate
 spec:
-  minReadySeconds: 30
   selector:
     matchLabels:
       app: candidate
-  replicas: 1
+  replicas: 2
   template:
     metadata:
       labels:
@@ -15,20 +14,20 @@ spec:
     spec:
       containers:
         - name: candidate
-          image: namrahov/candidate-image:latest
-
+          image: namrahov/candidate-image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080 # The port that the container is running on in the cluster
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: candidate
-
+  name: candidate-k8ssvc
 spec:
+  type: NodePort
   selector:
     app: candidate
-
   ports:
-    - name: http
-      port: 8443
-
-  type: LoadBalancer
+    - nodePort: 30163
+      port: 8080
+      targetPort: 8080
