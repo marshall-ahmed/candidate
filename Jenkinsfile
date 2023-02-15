@@ -1,64 +1,40 @@
-@Library('jenkins-shared-library@master') _
 pipeline {
   agent any
 
-  parameters {
-	choice(name: 'action', choices: 'create\nrollback', description: 'Create/rollback of the deployment')
-    string(name: 'ImageName', description: "Name of the docker build")
-	string(name: 'ImageTag', description: "Name of the docker build")
-	string(name: 'AppName', description: "Name of the Application")
-    string(name: 'docker_repo', description: "Name of docker repository")
-  }
-
-
     stages {
-        stage('Git Checkout') {
-            when {
-				expression { params.action == 'create' }
-			}
+        stage('Build Gradle') {
             steps {
-                gitCheckout(
-                    branch: "master",
-                    url: "https://github.com/marshall-ahmed/candidate.git"
-                )
+                 checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/marshall-ahmed/candidate.git']])
+                 sh './gradlew assemble'
             }
         }
-        stage('Build Gradle'){
-            when {
-				expression { params.action == 'create' }
-			}
-    		steps {
-        		dir("${params.AppName}") {
-        			sh './gradlew assemble'
-        		}
-    		}
-	    }
 
-	    stage("Docker Build and Push") {
-	        when {
-				expression { params.action == 'create' }
-			}
-	        steps {
-	            dir("${params.AppName}") {
-	                dockerBuild ( "${params.ImageName}", "${params.docker_repo}" )
-	            }
-	        }
-	    }
 
-       stage("Create deployment") {
-       			when {
-       				expression { params.action == 'create' }
-       			}
-       	        steps {
-                   	 dir("${params.AppName}") {
-                   	    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                   	              accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                   	              credentialsId: 'AWS_Credentials',
-                   	              secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                   	                kubernetesDeploy(configs: "deploy-all.yaml", kubeconfigId: "kubernetes")
-                         }
-                   	 }
+	   stage('Build docker image') {
+             steps {
+                 script {
+                    sh 'docker build -t namrahov/candidate-image .'
+                 }
+            }
+       }
+
+       stage('Push image to hub'){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerhubpwd')]) {
+                         sh 'docker login -u suresh394 -p ${dockerhubpwd}'
+                    }
+                         sh 'docker push namrahov/candidate-image'
                 }
+            }
+       }
+
+       stage('Deploy to K8s'){
+            steps{
+                script{
+                      kubernetesDeploy (configs: 'deploy-all.yaml',kubeconfigId: 'kubeconfig')
+                }
+            }
        }
 
 
