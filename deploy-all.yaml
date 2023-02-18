@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: candidate
-          image: namrahov/candidate-image
+          image: ${REPOSITORY_TAG}
 ---
 apiVersion: v1
 kind: Service

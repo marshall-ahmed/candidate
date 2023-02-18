@@ -1,6 +1,13 @@
 pipeline {
   agent any
 
+   environment {
+          SERVICE_NAME = "candidate-image"
+          ORGANIZATION_NAME = "marshall-ahmed"
+          DOCKERHUB_USERNAME = "namrahov"
+          REPOSITORY_TAG = "${DOCKERHUB_USERNAME}/${ORGANIZATION_NAME}-${SERVICE_NAME}:${BUILD_ID}"
+   }
+
     stages {
         stage('Build Gradle') {
             steps {
@@ -13,7 +20,7 @@ pipeline {
 	   stage('Build docker image') {
              steps {
                  script {
-                    sh 'docker build -t namrahov/candidate-image .'
+                    sh 'docker build -t ${REPOSITORY_TAG} .'
                  }
             }
        }
@@ -24,7 +31,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerhubpwd')]) {
                          sh 'docker login -u namrahov -p ${dockerhubpwd}'
                     }
-                         sh 'docker push namrahov/candidate-image'
+                         sh 'docker push ${REPOSITORY_TAG}'
                 }
             }
        }
