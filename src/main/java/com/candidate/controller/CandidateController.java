@@ -14,7 +14,7 @@ public class CandidateController {
     @GetMapping
     public Integer sumCompany() {
         log.info("islediiiiiiiiiiiiiiiiiiiiiiiiii");
-        return 42;
+        return 52;
     }
 }
 
