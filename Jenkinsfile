@@ -42,9 +42,7 @@ pipeline {
        stage('Deploy to K8s'){
             steps{
                 sh "aws eks update-kubeconfig --region eu-central-1 --name orxan"
-                script{
-                      kubernetesDeploy (configs: 'deploy-all.yaml',kubeconfigId: 'kubeconfig')
-                }
+                sh " envsubst < ${WORKSPACE}/deploy-all.yaml | ./kubectl apply -f - "
             }
        }
 
