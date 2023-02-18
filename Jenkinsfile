@@ -46,6 +46,14 @@ pipeline {
             }
         }
 
+       stage('Remove local image') {
+             steps {
+                 script {
+                     sh "docker rmi ${REPOSITORY_TAG}"
+                 }
+             }
+       }
+
        stage('Deploy to K8s'){
             steps{
                 sh "aws eks update-kubeconfig --region eu-central-1 --name orxan"
