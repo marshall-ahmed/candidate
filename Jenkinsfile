@@ -56,7 +56,7 @@ pipeline {
 
        stage('Deploy to K8s'){
             steps{
-                sh "aws eks update-kubeconfig --region eu-central-1 --name orxan"
+                sh "aws eks update-kubeconfig --region eu-central-1 --name fleetman"
                 sh " envsubst < ${WORKSPACE}/deploy-all.yaml | ./kubectl apply -f - "
             }
        }
