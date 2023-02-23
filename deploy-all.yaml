@@ -22,8 +22,6 @@ spec:
             successThreshold: 3
             initialDelaySeconds: 5
             periodSeconds: 10
-          args:
-          - /server
           livenessProbe:
             httpGet:
               path: /health
